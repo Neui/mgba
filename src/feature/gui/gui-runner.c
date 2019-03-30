@@ -504,7 +504,7 @@ void mGUIRun(struct mGUIRunner* runner, const char* path) {
 						}
 						CircleBufferWrite32(&runner->fpsBuffer, delta);
 						runner->totalDelta += delta;
-						runner->fps = (CircleBufferSize(&runner->fpsBuffer) * FPS_GRANULARITY * 1000000.0f) / (runner->totalDelta * sizeof(uint32_t));
+						runner->fps = (CircleBufferSize(&runner->fpsBuffer) * FPS_GRANULARITY * 1000000.0f) / (runner->totalDelta * sizeof(uint32_t) + 1);
 					}
 				}
 				if (frame == AUTOSAVE_GRANULARITY) {
