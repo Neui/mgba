@@ -27,6 +27,10 @@ typedef uint32_t color_t;
 #define M_G5(X) (((X) >> 5) & 0x1F)
 #define M_B5(X) (((X) >> 10) & 0x1F)
 
+#define M_R565(X) ((X) & 0x1F)
+#define M_G565(X) (((X) >> 5) & 0x3F)
+#define M_B565(X) (((X) >> 11) & 0x1F)
+
 #define M_R8(X) (((((X) << 3) & 0xF8) * 0x21) >> 5)
 #define M_G8(X) (((((X) >> 2) & 0xF8) * 0x21) >> 5)
 #define M_B8(X) (((((X) >> 7) & 0xF8) * 0x21) >> 5)
@@ -35,6 +39,11 @@ typedef uint32_t color_t;
 #define M_RGB5_TO_RGB8(X) ((M_R5(X) << 19) | (M_G5(X) << 11) | (M_B5(X) << 3))
 #define M_RGB8_TO_BGR5(X) ((((X) & 0xF8) >> 3) | (((X) & 0xF800) >> 6) | (((X) & 0xF80000) >> 9))
 #define M_RGB8_TO_RGB5(X) ((((X) & 0xF8) << 7) | (((X) & 0xF800) >> 6) | (((X) & 0xF80000) >> 19))
+
+#define M_RGB565_TO_BGR8(X) ((M_R565(X) << 3) | (M_G565(X) << 11) | (M_B565(X) << 19))
+#define M_RGB565_TO_RGB8(X) ((M_R565(X) << 19) | (M_G565(X) << 11) | (M_B565(X) << 3))
+#define M_RGB8_TO_BGR565(X) ((((X) & 0xF8) >> 3) | (((X) & 0xFC00) >> 5) | (((X) & 0xF80000) >> 8))
+#define M_RGB8_TO_RGB565(X) ((((X) & 0xF8) << 8) | (((X) & 0xFC00) >> 5) | (((X) & 0xF80000) >> 19))
 
 #ifndef PYCPARSE
 static inline color_t mColorFrom555(uint16_t value) {
