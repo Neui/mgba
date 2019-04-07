@@ -39,20 +39,20 @@ struct VFile* VFileOpen(const char* path, int flags) {
 		break;
 	}
 #if defined(TINSPIRE)
-  /* Try with .TNS first if it doesn't contain it */
-  if (!endswith(path, ".tns")) {
-    char *tnsPath = malloc(strlen(path) + 4 + 1);
-    if (!tnsPath) {
-      return NULL;
-    }
-    strcpy(tnsPath, path);
-    strcat(tnsPath, ".tns");
-    struct VFile *tns = VFileFOpen(tnsPath, chflags);
-    free(tnsPath);
-    if (tns) {
-      return tns;
-    }
-  }
+	/* Try with .TNS first if it doesn't contain it */
+	if (!endswith(path, ".tns")) {
+		char *tnsPath = malloc(strlen(path) + 4 + 1);
+		if (!tnsPath) {
+			return NULL;
+		}
+		strcpy(tnsPath, path);
+		strcat(tnsPath, ".tns");
+		struct VFile *tns = VFileFOpen(tnsPath, chflags);
+		free(tnsPath);
+		if (tns) {
+			return tns;
+		}
+	}
 #endif
 	return VFileFOpen(path, chflags);
 #elif defined(PSP2)
@@ -256,11 +256,11 @@ struct VFile* VDirFindNextAvailable(struct VDir* dir, const char* basename, cons
 		const char* dotPoint = strrchr(filename, '.');
 		size_t len = strlen(filename);
 #if defined(TINSPIRE)
-    if (endswith(filename, ".tns")) {
-      len -= 4;
-      // HACK: We can't modify filename and it seems there is no strnrchr
-      dotPoint = strnrstr(filename, ".", len);
-    }
+	if (endswith(filename, ".tns")) {
+		len -= 4;
+		// HACK: filename is unmodifyable and it seems there is no strnrchr
+		dotPoint = strnrstr(filename, ".", len);
+	}
 #endif
 		if (dotPoint) {
 			len = (dotPoint - filename);
