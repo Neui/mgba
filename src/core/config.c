@@ -219,7 +219,7 @@ void mCoreConfigDirectory(char* out, size_t outLength) {
 	UNUSED(portable);
 	snprintf(out, outLength, "ux0:data/%s", projectName);
 	sceIoMkdir(out, 0777);
-#elif defined(GEKKO) || defined(__SWITCH__)
+#elif defined(GEKKO) || defined(__SWITCH__) || defined(TINSPIRE)
 	UNUSED(portable);
 	snprintf(out, outLength, "/%s", projectName);
 	mkdir(out, 0777);
