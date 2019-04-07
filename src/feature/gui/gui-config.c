@@ -16,6 +16,7 @@
 #include <mgba-util/gui/file-select.h>
 #include <mgba-util/gui/menu.h>
 #include <mgba-util/vfs.h>
+#include <mgba-util/string.h>
 
 #ifndef GUI_MAX_INPUTS
 #define GUI_MAX_INPUTS 7
@@ -28,6 +29,11 @@ static bool _biosNamed(const char* name) {
 	if (strstr(name, "bios")) {
 		return true;
 	}
+#if defined(TINSPIRE)
+	if (endswith(name, ".bin.tns")) {
+		return true;
+	}
+#endif
 	if (!strncmp(ext, "bin", PATH_MAX)) {
 		return true;
 	}
