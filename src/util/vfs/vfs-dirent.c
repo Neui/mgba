@@ -79,7 +79,13 @@ bool _vdClose(struct VDir* vd) {
 
 void _vdRewind(struct VDir* vd) {
 	struct VDirDE* vdde = (struct VDirDE*) vd;
+#if defined(TINSPIRE)
+  /* rewinddir() not yet supported in Ndless, this is more of an HACK */
+	closedir(vdde->de);
+	vdde->de = opendir(vdde->path);
+#else
 	rewinddir(vdde->de);
+#endif
 }
 
 struct VDirEntry* _vdListNext(struct VDir* vd) {
@@ -147,7 +153,7 @@ const char* _vdeName(struct VDirEntry* vde) {
 
 static enum VFSType _vdeType(struct VDirEntry* vde) {
 	struct VDirEntryDE* vdede = (struct VDirEntryDE*) vde;
-#if !defined(WIN32) && !defined(__HAIKU__)
+#if !defined(WIN32) && !defined(__HAIKU__) && !defined(TINSPIRE)
 	if (vdede->ent->d_type == DT_DIR) {
 		return VFS_DIRECTORY;
 	}
