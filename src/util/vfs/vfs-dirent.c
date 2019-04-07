@@ -80,7 +80,7 @@ bool _vdClose(struct VDir* vd) {
 void _vdRewind(struct VDir* vd) {
 	struct VDirDE* vdde = (struct VDirDE*) vd;
 #if defined(TINSPIRE)
-  /* rewinddir() not yet supported in Ndless, this is more of an HACK */
+	/* rewinddir() not yet supported in Ndless, this is more of an HACK */
 	closedir(vdde->de);
 	vdde->de = opendir(vdde->path);
 #else
