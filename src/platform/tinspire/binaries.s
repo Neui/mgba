@@ -9,6 +9,7 @@ ext_font_start:
 .global ext_font_end
 ext_font_end:
 .global ext_font_size
+.align 4
 ext_font_size:
 .int ext_font_end - ext_font_start
 
@@ -18,6 +19,7 @@ ext_icons_start:
 .global ext_icons_end
 ext_icons_end:
 .global ext_icons_size
+.align 4
 ext_icons_size:
 .int ext_icons_end - ext_icons_start
 
