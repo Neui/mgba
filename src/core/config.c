@@ -219,7 +219,7 @@ void mCoreConfigDirectory(char* out, size_t outLength) {
 	UNUSED(portable);
 	snprintf(out, outLength, "ux0:data/%s", projectName);
 	sceIoMkdir(out, 0777);
-#elif defined(GEKKO) || defined(__SWITCH__) || defined(TINSPIRE)
+#elif defined(GEKKO) || defined(__SWITCH__)
 	UNUSED(portable);
 	snprintf(out, outLength, "/%s", projectName);
 	mkdir(out, 0777);
@@ -227,6 +227,10 @@ void mCoreConfigDirectory(char* out, size_t outLength) {
 	UNUSED(portable);
 	snprintf(out, outLength, "/%s", projectName);
 	FSUSER_CreateDirectory(sdmcArchive, fsMakePath(PATH_ASCII, out), 0);
+#elif defined(TINSPIRE)
+	UNUSED(portable);
+	snprintf(out, outLength, "/documents/%s", projectName);
+	mkdir(out, 0777);
 #else
 	getcwd(out, outLength);
 	strncat(out, PATH_SEP "portable.ini", outLength - strlen(out));
