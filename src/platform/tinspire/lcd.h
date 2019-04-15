@@ -17,7 +17,7 @@ struct LCDInfo {
 
 extern const struct LCDInfo lcdinfos[];
 
-bool LCDConvertAndBlit(struct LCDInfo info, struct ImageBuf buf, char *out);
+bool LCDConvertAndBlit(struct LCDInfo info, const struct ImageBuf* buf, char *out);
 
 struct LCDInfo GetLCDInfo(const scr_type_t type);
 #endif

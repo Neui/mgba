@@ -24,11 +24,11 @@ struct LCDInfo GetLCDInfo(const scr_type_t type) {
 	return *lcdinfo;
 }
 
-bool LCDConvertAndBlit(struct LCDInfo info, struct ImageBuf buf, char *out) {
-	assert(info.width == buf.w);
-	assert(info.height == buf.h);
+bool LCDConvertAndBlit(struct LCDInfo info, const struct ImageBuf* buf, char *out) {
+	assert(info.width == buf->w);
+	assert(info.height == buf->h);
 	if (info.redBBP == 5 && info.greenBBP == 6 && info.blueBBP == 5) {
-		lcd_blit(buf.data, info.type);
+		lcd_blit(buf->data, info.type);
 		return true;
 	}
 	

@@ -238,7 +238,7 @@ static uint16_t _pollGameInput(struct mGUIRunner* runner) {
 
 static void _drawStart(void) {
 	//mLOG(GUI_TINSPIRE, DEBUG, "Called _drawStart()");
-	DrawClear(video.screen, 0);
+	DrawClear(&video.screen, 0);
 }
 
 static void _prepareForFrame(struct mGUIRunner* runner) {
@@ -272,21 +272,21 @@ static void _drawFrame(struct mGUIRunner* runner, bool faded) {
 	if (faded) {
 		memcpy(video.gamePost.data, video.game.data,
 				sizeof(video.game.data[0]) * video.game.w * video.game.h);
-		DrawFade(video.gamePost);
+		DrawFade(&video.gamePost);
 		vb = &video.gamePost;
 	}
 	
 	if (video.screenMode == SM_PA) {
-		DrawOn(video.screen, *vb,
+		DrawOn(&video.screen, vb,
 				video.screen.w / 2 - video.game.w / 2,
 				video.screen.h / 2 - video.game.h / 2);
 	} else if (video.screenMode == SM_AR_FIT) {
-		DrawOnResized(video.screen, *vb,
+		DrawOnResized(&video.screen, vb,
 				video.screen.w / 2 - video.fit_width / 2,
 				video.screen.h / 2 - video.fit_height / 2,
 				video.fit_width, video.fit_height);
 	} else if (video.screenMode == SM_STRETCH) {
-		DrawOnResized(video.screen, *vb,
+		DrawOnResized(&video.screen, vb,
 				0, 0,
 				video.lcd.width, video.lcd.height);
 	}
@@ -294,7 +294,7 @@ static void _drawFrame(struct mGUIRunner* runner, bool faded) {
 
 static void _drawEnd(void) {
 	//mLOG(GUI_TINSPIRE, DEBUG, "Called _drawEnd()");
-	LCDConvertAndBlit(video.lcd, video.screen, (char*)video.screen.data);
+	LCDConvertAndBlit(video.lcd, &video.screen, (char*)video.screen.data);
 	if (video.frameLimiter) {
 		msleep(1000 / 61); // Account for some overhead
 	} else {
@@ -388,14 +388,14 @@ static void _setup(struct mGUIRunner* runner) {
 		video.game.w = video.gamePost.w = width;
 		video.game.h = video.gamePost.h = height;
 		
-		void *game = realloc(video.game.data, DrawMemSize(video.game));
+		void *game = realloc(video.game.data, DrawMemSize(&video.game));
 		if (!game) {
 			AbortCleanly(NULL, NULL);
 		}
 		video.game.data = game;
-		DrawClear(video.game, 0);
+		DrawClear(&video.game, 0);
 		
-		void *gamePost = realloc(video.gamePost.data, DrawMemSize(video.gamePost));
+		void *gamePost = realloc(video.gamePost.data, DrawMemSize(&video.gamePost));
 		if (!gamePost) {
 			AbortCleanly(NULL, NULL);
 		}
@@ -441,7 +441,7 @@ int main(int argc, char **argv) {
 	
 	video.screen.w = video.lcd.width;
 	video.screen.h = video.lcd.height;
-	video.screen.data = malloc(DrawMemSize(video.screen));
+	video.screen.data = malloc(DrawMemSize(&video.screen));
 	if (!video.screen.data) {
 		show_msgbox("Out of memory error", "Not enough memory for a screen buffer!");
 		return 1;
