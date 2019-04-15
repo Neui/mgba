@@ -52,6 +52,7 @@ bool LCDConvertAndBlit(struct LCDInfo info, struct ImageBuf buf, char *out) {
 			out[i] = (((M_R565(c) << 1) + M_G565(c) + (M_B565(c) << 1)) / 3);
 			if ((6 - info.grayBBP) > 0) {
 				out[i] >>= 6 - info.grayBBP;
+			} else {
 				out[i] <<= info.grayBBP - 6;
 			}
 		}
