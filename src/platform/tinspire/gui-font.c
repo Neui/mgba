@@ -233,8 +233,8 @@ void GUIFontDrawGlyph(const struct GUIFont* font, int x, int y, uint32_t color, 
 	}
 	
 	struct GUIFontGlyphMetric metric = defaultFontMetrics[glyph];
-	const struct ImageBuf* buf = &font->glyphs[glyph];
-	DrawOnTinted(font->bg, buf,
+	struct ImageBuf buf = font->glyphs[glyph];
+	DrawOnTinted(*font->bg, buf,
 			x, y - font->height + metric.padding.top,
 			M_RGB8_TO_RGB565(color), color >> 24);
 }
@@ -246,7 +246,7 @@ void GUIFontDrawIcon(const struct GUIFont* font, int x, int y, enum GUIAlignment
 	}
 
 	struct GUIIconMetric metric = defaultIconMetrics[icon];
-	const struct ImageBuf* buf = font->icons + icon;
+	struct ImageBuf buf = font->icons[icon];
 	switch (align & GUI_ALIGN_HCENTER) {
 	case GUI_ALIGN_HCENTER:
 		x -= metric.width / 2;
@@ -271,7 +271,7 @@ void GUIFontDrawIcon(const struct GUIFont* font, int x, int y, enum GUIAlignment
 	case GUI_ORIENT_0:
 	default:
 		// TODO: Rotation // Originally from 3ds port
-		DrawOnTinted(font->bg, buf, x, y, M_RGB8_TO_RGB565(color), color >> 24);
+		DrawOnTinted(*font->bg, buf, x, y, M_RGB8_TO_RGB565(color), color >> 24);
 		break;
 	}
 }
@@ -286,15 +286,15 @@ void GUIFontDrawIconSize(const struct GUIFont* font, int x, int y, int w, int h,
 
 	UNUSED(color); // TODO: Tinted version of DrawOnresized
 
-	const struct ImageBuf* buf = font->icons + icon;
+	struct ImageBuf buf = font->icons[icon];
 	
 	if (w == 0 || h == 0) {
 		//mLOG(GUI_TINSPIRE, DEBUG, "Trying to draw with w=%i h=%i", w, h);
 		return;
 	}
 	
-	assert(w == (int)buf->w); // Resizing is currently not supported
-	assert(h == (int)buf->h); // Resizing is currently not supported
+	assert(w == (int)buf.w); // Resizing is currently not supported
+	assert(h == (int)buf.h); // Resizing is currently not supported
 	
-	DrawOnResized(font->bg, buf, x, y, w, h);
+	DrawOnResized(*font->bg, buf, x, y, w, h);
 }
