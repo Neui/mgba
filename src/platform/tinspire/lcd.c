@@ -32,32 +32,31 @@ bool LCDConvertAndBlit(struct LCDInfo info, struct ImageBuf buf, char *out) {
 		return true;
 	}
 	
-	/* I'm assuming gcc optimizes this to put the ifs outside the loop */
-	for (unsigned y = 0; y < buf.h; y++) {
-		for (unsigned x = 0; x < buf.w; x++) {
-			color_t c = DrawVar(buf, x, y);
-			if (info.redBBP == 5 && info.greenBBP == 5
-					&& info.blueBBP == 5) {
-				((color_t*)out)[info.width * y + x] = (x & 0x1F)
-					| ((x > 1) & 0x7FE0);
-			} else if (info.redBBP == 4 && info.greenBBP == 4
-					&& info.blueBBP == 4) {
-				((color_t*)out)[info.width * y + x] = 0
-					| (M_R565(c) >> 1)
-					| ((M_G565(c) & 0xF) << 4)
-					| ((M_B565(c) & 0xF) << 8);
-			} else if (info.grayBBP > 0) {
-				/* We need to be fast, so don't do complicated stuff */
-				out[y + x] = (((M_R565(c) << 1) + M_G565(c) + (M_B565(c) << 1)) / 3);
-				if ((6 - info.grayBBP) > 0) {
-					out[y + x] >>= 6 - info.grayBBP;
-				} else {
-					out[y + x] <<= info.grayBBP - 6;
-				}
-			} else {
-				return false;
+	if (info.redBBP == 5 && info.greenBBP == 5 && info.blueBBP == 5) {
+		for (unsigned i = 0; i < DrawMemSize(buf); i++) {
+			color_t c = DrawVar(buf, i, 1);
+			((color_t*)out)[info.width + i] = (c & 0x1F) | ((c > 1) & 0x7FE0);
+		}
+	} else if (info.redBBP == 4 && info.greenBBP == 4 && info.blueBBP == 4) {
+		for (unsigned i = 0; i < DrawMemSize(buf); i++) {
+			color_t c = DrawVar(buf, i, 1);
+			((color_t*)out)[info.width + i] = 0
+				| (M_R565(c) >> 1)
+				| ((M_G565(c) & 0xF) << 4)
+				| ((M_B565(c) & 0xF) << 8);
+		}
+	} else if (info.grayBBP > 0) {
+		for (unsigned i = 0; i < DrawMemSize(buf); i++) {
+			/* We need to be fast, so don't do complicated stuff */
+			color_t c = DrawVar(buf, i, 1);
+			out[i] = (((M_R565(c) << 1) + M_G565(c) + (M_B565(c) << 1)) / 3);
+			if ((6 - info.grayBBP) > 0) {
+				out[i] >>= 6 - info.grayBBP;
+				out[i] <<= info.grayBBP - 6;
 			}
 		}
+	} else {
+		return false;
 	}
 	
 	lcd_blit(out, info.type);
