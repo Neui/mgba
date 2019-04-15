@@ -296,7 +296,7 @@ static void _drawEnd(void) {
 	//mLOG(GUI_TINSPIRE, DEBUG, "Called _drawEnd()");
 	LCDConvertAndBlit(video.lcd, video.screen, (char*)video.screen.data);
 	if (video.frameLimiter) {
-		msleep(1000 / 60); // Hopefully this works
+		msleep(1000 / 61); // Account for some overhead
 	} else {
 		idle();
 	}
