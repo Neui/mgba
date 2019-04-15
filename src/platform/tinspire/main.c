@@ -414,6 +414,13 @@ static void _setup(struct mGUIRunner* runner) {
 	video.frameLimiter = true;
 }
 
+static void _dummyLog(struct mLogger* logger, int category, enum mLogLevel level, const char* format, va_list args) {
+	return;
+}
+static struct mLogger _dummyLogger = {
+	.log = _dummyLog
+};
+
 int main(int argc, char **argv) {
 	scr_type_t lcdtype = lcd_type();
 	if (lcdtype == SCR_TYPE_INVALID) {
@@ -446,6 +453,8 @@ int main(int argc, char **argv) {
 		_cleanup();
 		return 1;
 	}
+	
+	mLogSetDefaultLogger(&_dummyLogger);
 	
 	/* Logging isn't properly setup at this point, but it should still
 	 * print to stdout, so it's OK. */
@@ -523,7 +532,7 @@ int main(int argc, char **argv) {
 	};
 
 	mGUIInit(&runner, "tinspire");
-	mLogSetDefaultLogger(NULL); // TODO: Temporary log filter bypass
+	//mLogSetDefaultLogger(NULL); // TODO: Temporary log filter bypass
 	
 	/* Most stuff is now allocated, so let's try to get memory for roms */
 	if (!_allocateRomBuffer()) {
